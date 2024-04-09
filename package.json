@@ -1,0 +1,22 @@
+{
+  "name": "automatizador-indicadores",
+  "version": "1.0.0",
+  "description": "coleta, formatação e cálculo de indicadores do TCG-CETEM",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tpinaa/automatizador-indicadores.git"
+  },
+  "keywords": [
+    "indicadores"
+  ],
+  "author": "Tatiana Pina",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tpinaa/automatizador-indicadores/issues"
+  },
+  "homepage": "https://github.com/tpinaa/automatizador-indicadores#readme"
+}
