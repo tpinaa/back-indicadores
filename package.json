@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "coleta, formatação e cálculo de indicadores do TCG-CETEM",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/tpinaa/automatizador-indicadores/issues"
   },
-  "homepage": "https://github.com/tpinaa/automatizador-indicadores#readme"
+  "homepage": "https://github.com/tpinaa/automatizador-indicadores#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.3.2"
+  }
 }
