@@ -1,1 +1,2 @@
 # Meu Readme
+npm start

@@ -1,14 +1,14 @@
 import express from "express"
-import { criarUsuario, buscarUsuarios, buscarUsuarioPorId, deletarUsuarioPorId, atualizarUsuarioPorId } from "../services/usuarioService.js"
+import { criarUsuario, autenticarUsuario, buscarUsuarios, buscarUsuarioPorId, deletarUsuarioPorId, atualizarUsuarioPorId } from "../services/usuarioService.js"
 import { autenticacao } from "../middleware.js"
 const router = express.Router()
 
-router.get('/', async (req, res) => {
+router.get('/', autenticacao, async (req, res) => {
   const listaUsuarios = await buscarUsuarios()
   res.send(listaUsuarios)
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', autenticacao, async (req, res) => {
   const id = req.params.id
   const usuario = await buscarUsuarioPorId(id)
   res.send(usuario)
@@ -22,7 +22,16 @@ router.post('/', async (req, res, next) => {
   } catch (err) {
     next(err)
   }
+})
 
+router.post('/autenticacao', async (req, res, next) => {
+  try {
+    const { nome, senha } = req.body
+    const token = await autenticarUsuario(nome, senha)
+    res.json(token)
+  } catch(err) {
+    next(err)
+  }
 })
 
 router.delete('/:id', autenticacao, async (req, res) => {
@@ -31,7 +40,7 @@ router.delete('/:id', autenticacao, async (req, res) => {
   res.json(usuario)
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', autenticacao, async (req, res) => {
   const id = req.params.id
   const { nome, senha, perfil } = req.body
   const usuarioAtualizado = await atualizarUsuarioPorId(id, { nome, senha, perfil })

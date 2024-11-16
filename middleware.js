@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import jwt from 'jsonwebtoken'
 
 export async function tratamentoErros(err, req, res, next) {
     if (err instanceof mongoose.Error) {
@@ -12,12 +13,14 @@ export async function tratamentoErros(err, req, res, next) {
 }
 
 export async function autenticacao(req, res, next) {
-    let autenticado = false
-    if (autenticado) {
-        console.log('Autenticado')
+    const authHeader = req.headers['authorization']
+    const [_, token] = authHeader.split(' ')
+
+    try {
+        const payload = jwt.verify(token, "chave_secreta")
+        req.userId = payload.id
         next()
-    } else {
-        console.log('Falha na Autenticação')
-        next(new Error('Não Autorizado'))
+    } catch(err) {
+        next(err)
     }
 }

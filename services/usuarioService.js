@@ -1,8 +1,22 @@
+import jwt from "jsonwebtoken"
+
 import { Usuario } from "../model.js";
 
 export async function criarUsuario(nome, senha, perfil) {
     const usuario = await Usuario.create({ nome, senha, perfil })
     return usuario
+}
+
+export async function autenticarUsuario(nome, senha) {
+
+    const usuario = await Usuario.findOne({ nome })
+
+    if (senha !== usuario.senha) {
+        throw new Error('Credenciais inválidas')
+    }
+
+    const token = jwt.sign({ id: usuario.id }, 'chave_secreta', { expiresIn: "20s"})
+    return { token }
 }
 
 export async function buscarUsuarios() {
