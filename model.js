@@ -35,3 +35,13 @@ const PublicacaoSchema = new Schema(
 )
 
 export const Publicacao = model('Publicacao', PublicacaoSchema)
+
+const ParametroSchema = new Schema(
+    {
+        sigla: String,
+        descricao: String,
+        valor: Number
+    }
+)
+
+export const Parametro = model('Parametro', ParametroSchema)
