@@ -17,14 +17,9 @@ export const Usuario = model('Usuario', UsuarioSchema)
 const IndicadorSchema = new Schema(
     {
         nome: String,
-        formula: String,
-        unidade: String,
+        sigla: String,
+        valor: Number,
         descricao: String,
-        objetivo: String,
-        observacao: String,
-        justificativa: String,
-        comprovacao: String,
-        fonte: String,
     }
 )
 
@@ -32,14 +27,10 @@ export const Indicador = model('Indicador', IndicadorSchema)
 
 const PublicacaoSchema = new Schema(
     {
-        titulo: {type: String, required: true},
-        projeto: String,
-        situacao: Boolean,
-        dataRegistro: Date,
+        titulo: String,
         dataPublicacao: Date,
         autor: String,
-        tipo: String,
-        classificacao: String,
+        tipo: String
     }
 )
 
