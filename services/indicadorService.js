@@ -1,6 +1,17 @@
 import { Indicador } from "../model.js";
+import { buscarParametroPorSigla } from "./parametroService.js";
 
 export async function criarIndicador(nome, sigla, valor, descricao) {
+
+if (sigla.toUpperCase() === "IGPUB") {
+    const tnse = await buscarParametroPorSigla("TNSE")
+    const ngpb = await buscarParametroPorSigla("NGPB")
+
+    if (!tnse || !ngpb)
+    
+        valor = ngpb / tnse
+}
+
     const indicador = await Indicador.create({
         nome,
         sigla,

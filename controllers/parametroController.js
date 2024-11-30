@@ -1,5 +1,5 @@
 import express from "express"
-import { atualizarParametroPorId, buscarParametroPorId, buscarParametros, criarParametro, deletarParametroPorId } from "../services/parametroService.js"
+import { atualizarParametroPorId, buscarParametroPorSigla, buscarParametros, criarParametro, deletarParametroPorId } from "../services/parametroService.js"
 const router = express.Router()
 
 router.get('/', async (req, res, next) => {
@@ -11,10 +11,10 @@ router.get('/', async (req, res, next) => {
     }
 })
 
-router.get('/:id', async (req, res, next) => {
-    const id = req.params.id
+router.get('/:sigla', async (req, res, next) => {
+    const sigla = req.params.sigla
     try {
-        const parametro = await buscarParametroPorId(id)
+        const parametro = await buscarParametroPorSigla(sigla)
         res.json(parametro)
     } catch (err) {
         next(err)

@@ -12,10 +12,10 @@ export async function criarParametro(sigla, valor, descricao) {
 export async function buscarParametros() {
     const lista = await Parametro.find();
     return lista;
-  }
+}
 
-export async function buscarParametroPorId(idParametro) {
-    const parametro = await Parametro.findById(idParametro)
+export async function buscarParametroPorSigla(siglaParametro) {
+    const parametro = await Parametro.find({ $where: { sigla: siglaParametro } })
     return parametro
 }
 
