@@ -15,7 +15,7 @@ export async function buscarParametros() {
 }
 
 export async function buscarParametroPorSigla(siglaParametro) {
-    const parametro = await Parametro.find({ $where: { sigla: siglaParametro } })
+    const parametro = await Parametro.findOne({ sigla: siglaParametro })
     return parametro
 }
 
@@ -32,26 +32,3 @@ export async function deletarParametroPorId(idParametro) {
     const parametro = await Parametro.findByIdAndDelete(idParametro)
     return parametro
 }
-
-/*
-    INDICADORES
-    nome : Indice geral de publicaçoes,
-    sigla: IGPUB
-    descricao: Razão entre NGPB e TNSE
-    valor: 76,00
-*/
-
-/*
-    PARÂMETROS_AMOSTRAIS
-    sigla: TNSE
-    descrição: número de técnicos de nivel superior vinculados a pesquisa no ano
-    (pesquisador, bolsista, tecnologista)
-    valor: 653
-*/
-
-/*
-    PARÂMETROS_AMOSTRAIS
-    sigla: NGPB
-    descrição: número de publicações no ano
-    valor: 13
-*/
