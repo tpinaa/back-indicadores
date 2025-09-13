@@ -4,10 +4,12 @@ const UsuarioSchema = new Schema(
     {
         nome: {
             type: String,
-            required: [true, 'Insira um nome']},
+            required: [true, 'Insira um nome']
+        },
         senha: {
             type: String,
-            minLength: [6, 'Senha deve conter no mínimo 6 caracteres']},
+            minLength: [6, 'Senha deve conter no mínimo 6 caracteres']
+        },
         perfil: String,
     }
 )
@@ -20,6 +22,7 @@ const IndicadorSchema = new Schema(
         sigla: String,
         valor: Number,
         descricao: String,
+        parametros: [{ type: Schema.Types.ObjectId, ref: 'Parametro' }]
     }
 )
 

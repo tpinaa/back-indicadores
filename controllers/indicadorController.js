@@ -22,12 +22,13 @@ router.get('/:id', async (req, res, next) => {
 })
 
 router.post('/', async (req, res) => {
-    const { nome, sigla, valor, descricao } = req.body
+    const { nome, sigla, valor, descricao, parametros } = req.body
     const indicador = await criarIndicador(
         nome,
         sigla,
         valor,
-        descricao
+        descricao,
+        parametros
     )
     res.json(indicador)
 })

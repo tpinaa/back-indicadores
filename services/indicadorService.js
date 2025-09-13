@@ -1,29 +1,36 @@
 import { Indicador } from '../model.js';
 import { buscarParametroPorSigla } from './parametroService.js';
 
-export async function criarIndicador(nome, sigla, valor, descricao) {
+export async function criarIndicador(nome, sigla, valor, descricao, parametros) {
   // Cálculo do IGPUB
+  let tnse, ngpb;
+
   if (sigla.toUpperCase() === 'IGPUB') {
-    const tnse = await buscarParametroPorSigla('TNSE');
-    const ngpb = await buscarParametroPorSigla('NGPB');
+    tnse = await buscarParametroPorSigla('TNSE');
+    ngpb = await buscarParametroPorSigla('NGPB');
 
     if (!tnse || !ngpb)
-      throw new Error('Parâmetros para cálculo do indicador não foram cadastrados ainda');
+      throw new Error(
+        'Parâmetros para cálculo do indicador não foram cadastrados ainda'
+      );
 
     valor = ngpb.valor / tnse.valor;
+    parametros = [ngpb,tnse]
   }
-
+  
   const indicador = await Indicador.create({
     nome,
     sigla,
-    valor,
+    // Ternário
+    valor: valor ? valor : 0,
     descricao,
+    parametros: parametros ? parametros : [],
   });
   return indicador;
 }
 
 export async function buscarIndicadores() {
-  const lista = await Indicador.find();
+  const lista = await Indicador.find().populate('parametros');
   return lista;
 }
 
