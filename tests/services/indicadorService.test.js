@@ -14,36 +14,32 @@ jest.mock('../../src/services/parametroService.js', () => ({
 
 describe('criarIndicador', () => {
   const baseData = {
-    nome: '',
-    valor: null,
-    sigla: '',
-    descricao: '',
-    parametros: null,
+    nome: 'Indicador de Teste',
+    sigla: 'TESTE',
+    descricao: 'Valor 1 / Valor 2',
   };
+
+  //Função helper para criar dados de teste.
+  const criarData = (overrides = {}) => ({
+    ...baseData,
+    valor: overrides.valor || null,
+    parametros: overrides.parametros || null,
+    ...overrides,
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  const criarData = (overrides = {}) => ({
-    ...baseData,
-    ...overrides,
-  });
-
-  it('O valor e parâmetro de um indicador sem fórmula devem vir 0 e []', async () => {
-    const data = criarData({
-      nome: 'Indicador IND',
-      sigla: 'IND',
-      descricao: 'PARAM1 / PARAM2',
-    });
+  //Teste 1: Indicador sem cálculo (Valor 0 e Parâmetros [])
+  it('deve retornar valor 0 e parâmetros vazios para um indicador sem fórmula', async () => {
+    const data = criarData({ descricao: '' });
 
     const mockIndicadorCriado = {
       id: '123',
-      nome: data.nome,
-      sigla: data.sigla,
       valor: 0,
-      descricao: data.descricao,
       parametros: [],
+      ...data
     };
 
     Indicador.create.mockResolvedValueOnce(mockIndicadorCriado);
@@ -67,7 +63,8 @@ describe('criarIndicador', () => {
     expect(indicador).toEqual(mockIndicadorCriado);
   });
 
-  it('O valor e parâmetro de um indicador com fórmula devem ser calculados corretamente', async () => {
+  //Teste 2: Indicador com cálculo correto.
+  it('deve calcular o valor e coletar parâmetros corretamente para um indicador com fórmula', async () => {
     const data = criarData({
       nome: 'Indicador IGPUB',
       sigla: 'IGPUB',
@@ -76,18 +73,16 @@ describe('criarIndicador', () => {
 
     const tnse = { id: 'p1', sigla: 'TNSE', valor: 2 };
     const ngpb = { id: 'p2', sigla: 'NGPB', valor: 10 };
+    const resultadoCalculado = tnse.valor / ngpb.valor;
 
-    // Ordem importa!
     buscarParametroPorSigla
       .mockResolvedValueOnce(tnse)
       .mockResolvedValueOnce(ngpb);
 
     const mockIndicadorCriado = {
       id: '123',
-      nome: data.nome,
-      sigla: data.sigla,
-      valor: 5,
-      descricao: data.descricao,
+      ...data,
+      valor: resultadoCalculado,
       parametros: [ngpb, tnse],
     };
 
@@ -108,19 +103,20 @@ describe('criarIndicador', () => {
     expect(Indicador.create).toHaveBeenCalledWith({
       nome: data.nome,
       sigla: data.sigla,
-      valor: 5,
+      valor: resultadoCalculado,
       descricao: data.descricao,
-      parametros: [ngpb, tnse],
+      parametros: [tnse, ngpb],
     });
 
     expect(indicador).toEqual(mockIndicadorCriado);
   });
 
-  it('deve lançar um erro ao tentar criar indicador com um dos parâmetros ausentes', async () => {
+  //Tsete 3: Lançamento de Erro.
+  it('deve lançar um erro se um dos parâmetros da fórmula estiver ausente', async () => {
     const data = criarData({
       nome: 'Indicador IGPUB',
       sigla: 'IGPUB',
-      descricao: 'TNSE / NGPB',
+      descricao: 'PARAM_AUSENTE / OUTRO',
     });
 
     buscarParametroPorSigla.mockResolvedValue(null);
@@ -134,7 +130,7 @@ describe('criarIndicador', () => {
     );
 
     await expect(promise).rejects.toThrow(
-      'Parâmetros para cálculo do indicador não foram cadastrados ainda'
+      'Parâmetros para cálculo do indicador ainda não foram cadastrados.'
     );
 
     expect(Indicador.create).not.toHaveBeenCalled();

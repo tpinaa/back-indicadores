@@ -1,35 +1,60 @@
 import { Publicacao } from '../model.js';
 
+//Tratamento de Erros Mongoose (Atualizacao/Validacao/Duplicidade)
 export async function criarPublicacao(titulo, dataPublicacao, autor, tipo) {
-  const publicacao = await Publicacao.create({
+  try {
+    const publicacao = await Publicacao.create({
     titulo,
     dataPublicacao,
     autor,
     tipo,
   });
   return publicacao;
+  } catch (error) {
+    throw (error);
+  }
 }
 
+//Tratamento de Erros Mongoose (Busca/Conexão)
 export async function buscarPublicacoes() {
-  const lista = await Publicacao.find();
-  return lista;
+  try {
+    const lista = await Publicacao.find();
+    return lista;
+  } catch (error) {
+    throw (error);
+  }
 }
 
+//Tratamento de Erro Mongoose (buscaID/CastError)
 export async function buscarPublicacaoPorId(idPublicacao) {
-    const publicacao = await Publicacao.findById(idPublicacao)
-    return publicacao
+  try {
+    const publicacao = await Publicacao.findById(idPublicacao);
+    return publicacao;
+  } catch (error) {
+    throw (error);
+  }
 }
 
+//Tratamento de Erro Mongoose (Atualizacao/Validacao/CastError)
 export async function atualizarPublicacaoPorId(idPublicacao, dadosAtualizados) {
-    const publicacaoAtualizada = await Publicacao.findByIdAndUpdate(
+   try {
+      const publicacaoAtualizada = await Publicacao.findByIdAndUpdate(
         idPublicacao,
         dadosAtualizados,
         { new: true }
-    )
-    return publicacaoAtualizada
+      )
+      return publicacaoAtualizada;
+   } catch (error) {
+    throw (error);
+   }
 }
 
+//Tratamento de Erro Mongoose (Exclusao/CastError)
 export async function deletarPublicacaoPorId(idPublicacao) {
-    const publicacao = await Publicacao.findByIdAndDelete(idPublicacao)
-    return publicacao
+  try{
+    const publicacao = await Publicacao.findByIdAndDelete(idPublicacao);
+    return publicacao;
+  } catch (error) {
+    throw (error);
+  }
 }

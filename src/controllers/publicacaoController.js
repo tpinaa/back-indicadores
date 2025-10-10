@@ -6,27 +6,37 @@ import {
     atualizarPublicacaoPorId,
     deletarPublicacaoPorId
 } from "../services/publicacaoService.js"
+
 const router = express.Router()
 
+//GET todas as publicacoes
 router.get('/', async (req, res, next) => {
     try {
         const listaPublicacoes = await buscarPublicacoes()
-        res.json(listaPublicacoes)
+        res.status(200).json(listaPublicacoes)
     } catch(err) {
         next(err)
     }
 })
 
+//GET publicacao por ID
 router.get('/:id', async (req, res, next) => {
     const id = req.params.id
     try {
         const publicacao = await buscarPublicacaoPorId(id)
-        res.json(publicacao)
+        if (!publicacao) {
+            const notFoundError = new Error(`Publicação com ID ${id} não encontrada.`);
+            notFoundError.status = 404;
+            return next(notFoundError);
+        }
+
+        res.status(200).json(publicacao)
     } catch(err) {
         next(err)
     }
 })
 
+//POST criar nova publicacao
 router.post('/', async (req, res, next) => {
     const { titulo, dataPublicacao, autor, tipo } = req.body
     try {
@@ -36,12 +46,13 @@ router.post('/', async (req, res, next) => {
             autor,
             tipo
         )
-        res.json(publicacao)
+        res.status(201).json(publicacao)
     } catch(err) {
         next(err)
     }
 })
 
+//PUT atualizar publicacao por ID
 router.put('/:id', async (req, res, next)=> {
     const id = req.params.id
     const { titulo, dataPublicacao, autor, tipo } = req.body
@@ -50,17 +61,31 @@ router.put('/:id', async (req, res, next)=> {
             id,
             {titulo, dataPublicacao, autor, tipo}
         )
-        res.json(publicacaoAtualizada)
+        if (!publicacaoAtualizada) {
+            const notFoundError = new Error(`Publicação com ${id} não encontrada para atualização`);
+            notFoundError.status = 404;
+            return next (notFoundError);
+        }
+
+        res.status(200).json(publicacaoAtualizada)
     } catch(err) {
         next(err)
     }
 })
 
+//DELETE publicacao por ID
 router.delete('/:id', async (req, res, next) => {
     const id = req.params.id
     try {
         const publicacao = await deletarPublicacaoPorId(id)
-        res.json(publicacao)
+        
+        if (!publicacao) {
+            const notFoundError = new Error(`Publicação com ${id} não encontrada para exclusão.`);
+            notFoundError.status = 404;
+            return next(notFoundError);
+        }
+
+        res.status(204).end()
     } catch(err) {
         next(err)
     }
